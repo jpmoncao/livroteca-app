@@ -1,14 +1,14 @@
+import { Link } from "expo-router";
 import { Pressable, View } from "react-native";
 
-import { PlatformPressable } from "@react-navigation/elements";
+import { useAuth } from "@/contexts/auth-context";
 import { Colors } from "../../constants/theme";
 import { useThemeColor } from "../../hooks/use-theme-color";
 import { ThemedText } from "../themed-text";
 import { IconSymbol } from "./icon-symbol";
 
-const IS_LOGGED_IN = false;
-
 export default function MenuMobile() {
+    const { isLoggedIn } = useAuth();
     const menuBackgroundColor = useThemeColor({
         light: Colors.light.menuBackground,
         dark: Colors.dark.menuBackground
@@ -55,16 +55,20 @@ export default function MenuMobile() {
                 <ThemedText type="subtitle">Livroteca</ThemedText>
             </Pressable>
             {
-                !IS_LOGGED_IN ?
+                !isLoggedIn ?
                     (
-                        <PlatformPressable href="/login" style={buttonStyle}>
-                            <ThemedText type="default">Login</ThemedText>
-                        </PlatformPressable>
+                        <Link href="/login" asChild>
+                            <Pressable style={buttonStyle}>
+                                <ThemedText type="default">Login</ThemedText>
+                            </Pressable>
+                        </Link>
                     ) :
                     (
-                        <PlatformPressable href="/perfil" style={profileButtonStyle}>
-                            <IconSymbol name="person.fill" size={24} color="white" />
-                        </PlatformPressable>
+                        <Link href="/perfil" asChild>
+                            <Pressable style={profileButtonStyle}>
+                                <IconSymbol name="person.fill" size={24} color="white" />
+                            </Pressable>
+                        </Link>
                     )
             }
         </View >

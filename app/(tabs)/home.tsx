@@ -1,37 +1,50 @@
 import { FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useEffect, useState } from 'react';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BOOK_COVER_COLORS } from '@/constants/theme';
-
-interface Book {
-  id: number;
-  title: string;
-  coverUrl?: string | undefined;
-}
-
-const books: Book[] = [
-  { id: 1, title: 'O Senhor dos Anéis', coverUrl: 'https://via.placeholder.com/150' },
-  { id: 2, title: 'O Hobbit', coverUrl: 'https://via.placeholder.com/150' },
-  { id: 3, title: 'A Guerra dos Tronos', coverUrl: 'https://via.placeholder.com/150' },
-  { id: 4, title: 'A Torre Negra', coverUrl: 'https://via.placeholder.com/150' },
-  { id: 5, title: 'A Rainha Vermelha', coverUrl: 'https://via.placeholder.com/150' },
-];
-const savedBooks: Book[] = [
-  { id: 6, title: 'O Peregrino', coverUrl: 'https://via.placeholder.com/150' },
-  { id: 7, title: 'Cartas de um diabo ao seu aprendiz', coverUrl: 'https://via.placeholder.com/150' },
-  { id: 8, title: 'O Príncipe', coverUrl: 'https://via.placeholder.com/150' },
-  { id: 9, title: 'O Conde de Monte Cristo', coverUrl: 'https://via.placeholder.com/150' },
-];
+import { searchBooks, type Book } from '@/lib/openLibrary';
+import { router } from 'expo-router';
 
 const BOOK_COVER_WIDTH = 120;
 const BOOK_COVER_HEIGHT = 180;
 
 export default function HomeScreen() {
+  const [books, setBooks] = useState<Book[]>([]);
+  const [hotBooks, setHotBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchBooks() {
+      setLoading(true);
+      try {
+        const [featured, popular] = await Promise.all([
+          searchBooks('senhor dos anéis hobbit', 5, 'pt'),
+          searchBooks('harry potter', 5, 'pt'),
+        ]);
+        setBooks(featured);
+        setHotBooks(popular);
+      } catch (error) {
+        console.error('Erro ao carregar livros:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchBooks();
+  }, []);
+
   const handleBookPress = (book: Book) => {
-    console.log('Book pressed:', book);
-    // router.push(`/book/${book.id}`);
+    router.push(`/book/${book.id}`);
   };
+
+  if (loading) {
+    return (
+      <ThemedView style={styles.container}>
+        <ThemedText type="default">Carregando livros...</ThemedText>
+      </ThemedView>
+    );
+  }
 
   return (
     <ThemedView style={styles.container}>
@@ -46,7 +59,7 @@ export default function HomeScreen() {
           renderItem={({ item, index }: { item: Book; index: number }) => (
             <TouchableOpacity style={styles.bookCover} onPress={() => handleBookPress(item)}>
               <Image
-                source={{ uri: item.coverUrl }}
+                source={{ uri: item.coverUrl ?? 'https://via.placeholder.com/150' }}
                 style={[
                   styles.bookCoverPlaceholder,
                   { backgroundColor: BOOK_COVER_COLORS[index % BOOK_COVER_COLORS.length] },
@@ -62,9 +75,9 @@ export default function HomeScreen() {
         />
       </ThemedView>
       <ThemedView style={styles.booksContainer}>
-        <ThemedText type="subtitle">Seus livros salvos</ThemedText>
+        <ThemedText type="subtitle">Os mais lidos da semana</ThemedText>
         <FlatList
-          data={savedBooks}
+          data={hotBooks}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.bookListContent}
@@ -72,7 +85,7 @@ export default function HomeScreen() {
           renderItem={({ item, index }: { item: Book; index: number }) => (
             <TouchableOpacity onPress={() => handleBookPress(item)} style={styles.bookCover}>
               <Image
-                source={{ uri: item.coverUrl }}
+                source={{ uri: item.coverUrl ?? 'https://via.placeholder.com/150' }}
                 style={[
                   styles.bookCoverPlaceholder,
                   { backgroundColor: BOOK_COVER_COLORS[(books.length + index) % BOOK_COVER_COLORS.length] },

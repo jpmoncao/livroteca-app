@@ -26,6 +26,12 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "O Livroteca precisa da câmera para escanear códigos ISBN dos livros."
+        }
+      ],
       "expo-router",
       [
         "expo-splash-screen",

@@ -1,9 +1,12 @@
+import { router } from 'expo-router';
+import { useEffect } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { BOOK_COVER_COLORS } from '@/constants/theme';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { IconSymbol } from '@/components/ui/icon-symbol';
+import { useAuth } from '@/contexts/auth-context';
 
 interface Book {
   id: number;
@@ -26,6 +29,18 @@ const BOOK_COVER_WIDTH = 100;
 const BOOK_COVER_HEIGHT = 150;
 
 export default function LibraryScreen() {
+  const { isLoggedIn } = useAuth();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.replace('/login');
+    }
+  }, [isLoggedIn]);
+
+  if (!isLoggedIn) {
+    return null;
+  }
+
   const handleBookPress = (book: Book) => {
     console.log('Book pressed:', book);
   };
