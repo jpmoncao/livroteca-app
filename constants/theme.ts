@@ -12,6 +12,7 @@ export const Colors = {
   light: {
     text: '#11181C',
     background: '#fff',
+    menuBackground: '#f5f5f5',
     tint: tintColorLight,
     icon: '#687076',
     tabIconDefault: '#687076',
@@ -20,12 +21,26 @@ export const Colors = {
   dark: {
     text: '#ECEDEE',
     background: '#151718',
+    menuBackground: '#2e3133',
     tint: tintColorDark,
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
   },
 };
+
+export const BOOK_COVER_COLORS = [
+  '#8B7355',
+  '#6B5344',
+  '#4B3324',
+  '#2B1304',
+  '#0B0304',
+  '#5C4033',
+  '#3D2817',
+  '#8B4513',
+  '#654321',
+  '#A0522D',
+];
 
 export const Fonts = Platform.select({
   ios: {
