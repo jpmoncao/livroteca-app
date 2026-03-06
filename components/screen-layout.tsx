@@ -18,7 +18,13 @@ export function ScreenLayout({ children }: ScreenLayoutProps) {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
         <Pressable
-          onPress={() => router.back()}
+          onPress={() => {
+            if (router.canGoBack()) {
+              router.back();
+            } else {
+              router.push(`/(tabs)/home`);
+            }
+          }}
           style={({ pressed, hovered }) => [
             styles.backButton,
             (pressed || hovered) && styles.backButtonHover,
