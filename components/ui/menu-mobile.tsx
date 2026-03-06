@@ -1,5 +1,6 @@
 import { Link } from "expo-router";
 import { Pressable, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useAuth } from "@/contexts/auth-context";
 import { Colors } from "../../constants/theme";
@@ -9,6 +10,7 @@ import { IconSymbol } from "./icon-symbol";
 
 export default function MenuMobile() {
     const { isLoggedIn } = useAuth();
+    const insets = useSafeAreaInsets();
     const menuBackgroundColor = useThemeColor({
         light: Colors.light.menuBackground,
         dark: Colors.dark.menuBackground
@@ -21,12 +23,13 @@ export default function MenuMobile() {
 
     const menuStyle = {
         width: '100%' as const,
-        height: 64,
+        paddingTop: insets.top + 12,
+        paddingBottom: 12,
+        paddingHorizontal: 16,
         backgroundColor: menuBackgroundColor,
         flexDirection: 'row' as const,
         justifyContent: 'space-between' as const,
         alignItems: 'center' as const,
-        paddingHorizontal: 12,
     };
 
     const buttonStyle = {
