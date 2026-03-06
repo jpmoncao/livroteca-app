@@ -16,7 +16,11 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AuthProvider>
-        <Stack>
+        <Stack
+          screenOptions={{
+            animation: 'slide_from_right',
+          }}
+        >
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="book/[id]" options={{ headerShown: false, title: 'Detalhes do livro' }} />
           <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
