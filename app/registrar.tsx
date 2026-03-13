@@ -45,6 +45,12 @@ export default function RegistrarScreen() {
             />
             <TextInput
               style={[styles.input, { color: textColor }]}
+              placeholder="Telefone"
+              placeholderTextColor={iconColor}
+              keyboardType="phone-pad"
+            />
+            <TextInput
+              style={[styles.input, { color: textColor }]}
               placeholder="Senha"
               placeholderTextColor={iconColor}
               secureTextEntry
