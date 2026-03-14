@@ -1,39 +1,46 @@
 /**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
+ * Paleta de cores do app para modo claro e escuro.
+ * Cores harmoniosas e consistentes em ambos os temas.
  */
 
 import { Platform } from 'react-native';
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+// Laranja principal da marca - vibrante e legível em ambos os temas
+const primaryOrange = '#E85D2C';
+const primaryOrangeDark = '#F07040';
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
-    menuBackground: '#f5f5f5',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
-    border: '#6B5344',
-    primary: '#6B5344',
-    secondary: '#687076',
-    rating: '#F5A623',
+    text: '#1A1D21',
+    textSecondary: '#5C6369',
+    background: '#FAFBFC',
+    menuBackground: '#F0F2F5',
+    tint: primaryOrange,
+    icon: '#6B7280',
+    tabIconDefault: '#8B9199',
+    tabIconSelected: primaryOrange,
+    border: '#E5E7EB',
+    borderFocus: '#D1D5DB',
+    primary: primaryOrange,
+    onPrimary: '#FFFFFF',
+    secondary: '#6B7280',
+    rating: '#F59E0B',
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    menuBackground: '#2e3133',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
-    border: '#6B5344',
-    primary: '#6B5344',
-    secondary: '#687076',
-    rating: '#F5A623',
+    text: '#F3F4F6',
+    textSecondary: '#9CA3AF',
+    background: '#0F1419',
+    menuBackground: '#1A1F26',
+    tint: primaryOrangeDark,
+    icon: '#9CA3AF',
+    tabIconDefault: '#6B7280',
+    tabIconSelected: primaryOrangeDark,
+    border: '#374151',
+    borderFocus: '#4B5563',
+    primary: primaryOrangeDark,
+    onPrimary: '#FFFFFF',
+    secondary: '#9CA3AF',
+    rating: '#FBBF24',
   },
 };
 

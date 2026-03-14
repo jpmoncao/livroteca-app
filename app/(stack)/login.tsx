@@ -14,6 +14,7 @@ export default function LoginScreen() {
   const iconColor = useThemeColor({}, 'icon');
   const borderColor = useThemeColor({}, 'border');
   const buttonPrimaryColor = useThemeColor({}, 'primary');
+  const buttonTextColor = useThemeColor({}, 'onPrimary');
 
   const handleLogin = () => {
     login();
@@ -50,7 +51,7 @@ export default function LoginScreen() {
           <Pressable
             onPress={handleLogin}
             style={({ pressed }) => [{ ...styles.button, backgroundColor: buttonPrimaryColor }, pressed && styles.buttonPressed]}>
-            <ThemedText type="defaultSemiBold" style={{ color: textColor }}>
+            <ThemedText type="defaultSemiBold" style={{ color: buttonTextColor }}>
               Entrar
             </ThemedText>
           </Pressable>

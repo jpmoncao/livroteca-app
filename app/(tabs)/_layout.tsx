@@ -10,22 +10,24 @@ import { useThemeColor } from '../../hooks/use-theme-color';
 export default function TabLayout() {
   const backgroundColor = useThemeColor({}, 'background');
   const menuBackgroundColor = useThemeColor({}, 'menuBackground');
-  const iconColor = useThemeColor({}, 'icon');
-  const tintColor = useThemeColor({}, 'tint');
+  const borderColor = useThemeColor({}, 'border');
+  const tabIconSelected = useThemeColor({}, 'tabIconSelected');
+  const tabIconDefaultColor = useThemeColor({}, 'tabIconDefault');
 
   return (
     <View style={{ flex: 1, backgroundColor }}>
       <MenuMobile />
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: tintColor,
+          tabBarActiveTintColor: tabIconSelected,
+          tabBarInactiveTintColor: tabIconDefaultColor,
           headerShown: false,
           tabBarButton: HapticTab,
-          animation: 'fade',
+          animation: 'none',
           tabBarStyle: {
             backgroundColor: menuBackgroundColor,
             borderTopWidth: 1,
-            borderTopColor: iconColor,
+            borderTopColor: borderColor,
           },
         }}
       >

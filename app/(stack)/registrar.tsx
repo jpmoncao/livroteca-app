@@ -13,6 +13,7 @@ export default function RegistrarScreen() {
   const iconColor = useThemeColor({}, 'icon');
   const borderColor = useThemeColor({}, 'border');
   const buttonPrimaryColor = useThemeColor({}, 'primary');
+  const buttonTextColor = useThemeColor({}, 'onPrimary');
 
   const handleRegistrar = () => {
     // TODO: Implementar cadastro real
@@ -62,7 +63,7 @@ export default function RegistrarScreen() {
           <Pressable
             onPress={handleRegistrar}
             style={({ pressed }) => [{ ...styles.button, backgroundColor: buttonPrimaryColor }, pressed && styles.buttonPressed]}>
-            <ThemedText type="defaultSemiBold" style={{ color: textColor }}>
+            <ThemedText type="defaultSemiBold" style={{ color: buttonTextColor }}>
               Cadastrar
             </ThemedText>
           </Pressable>

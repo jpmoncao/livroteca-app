@@ -37,8 +37,9 @@ export default function SearchScreen() {
     const [permission, requestPermission] = useCameraPermissions();
     const textColor = useThemeColor({}, 'text');
     const iconColor = useThemeColor({}, 'icon');
-    const borderColor = useThemeColor({}, 'icon');
+    const borderColor = useThemeColor({}, 'border');
     const buttonPrimaryColor = useThemeColor({}, 'primary');
+    const buttonTextColor = useThemeColor({}, 'onPrimary');
 
     const searchByName = useCallback(async (q: string) => {
         const trimmed = q.trim();
@@ -148,7 +149,7 @@ export default function SearchScreen() {
             borderRadius: 12,
         },
         scanButtonText: {
-            color: textColor,
+            color: buttonTextColor,
             fontWeight: '600',
         },
         centered: {
@@ -290,7 +291,7 @@ export default function SearchScreen() {
                     style={styles.scanButton}
                     onPress={handleOpenScanner}
                     activeOpacity={0.8}>
-                    <MaterialIcons name="qr-code-scanner" size={24} color={textColor} />
+                    <MaterialIcons name="qr-code-scanner" size={24} color={buttonTextColor} />
                     <ThemedText style={styles.scanButtonText}>Escanear ISBN</ThemedText>
                 </TouchableOpacity>
             </View>
@@ -377,7 +378,7 @@ export default function SearchScreen() {
                             }}
                             style={styles.closeButton}
                             hitSlop={12}>
-                            <MaterialIcons name="close" size={28} color={textColor} />
+                            <MaterialIcons name="close" size={28} color="#fff" />
                         </Pressable>
                     </View>
                     {!permission?.granted ? (
@@ -405,7 +406,7 @@ export default function SearchScreen() {
                             />
                             {scannerLoading && (
                                 <View style={styles.scannerOverlay}>
-                                    <ActivityIndicator size="large" color={textColor} />
+                                    <ActivityIndicator size="large" color="#fff" />
                                     <ThemedText style={styles.scannerOverlayText}>
                                         Buscando livro...
                                     </ThemedText>

@@ -3,7 +3,6 @@ import { Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useAuth } from "@/contexts/auth-context";
-import { Colors } from "../../constants/theme";
 import { useThemeColor } from "../../hooks/use-theme-color";
 import { ThemedText } from "../themed-text";
 import { IconSymbol } from "./icon-symbol";
@@ -11,15 +10,9 @@ import { IconSymbol } from "./icon-symbol";
 export default function MenuMobile() {
     const { isLoggedIn } = useAuth();
     const insets = useSafeAreaInsets();
-    const menuBackgroundColor = useThemeColor({
-        light: Colors.light.menuBackground,
-        dark: Colors.dark.menuBackground
-    }, 'menuBackground');
-
-    const buttonBackgroundColor = useThemeColor({
-        light: Colors.light.background,
-        dark: Colors.dark.background
-    }, 'background');
+    const menuBackgroundColor = useThemeColor({}, 'menuBackground');
+    const buttonBackgroundColor = useThemeColor({}, 'background');
+    const iconColor = useThemeColor({}, 'tint');
 
     const menuStyle = {
         width: '100%' as const,
@@ -69,7 +62,7 @@ export default function MenuMobile() {
                     (
                         <Link href="/perfil" asChild>
                             <Pressable style={profileButtonStyle}>
-                                <IconSymbol name="person.fill" size={24} color="white" />
+                                <IconSymbol name="person.fill" size={24} color={iconColor} />
                             </Pressable>
                         </Link>
                     )

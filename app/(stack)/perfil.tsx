@@ -10,8 +10,8 @@ import { useThemeColor } from '../../hooks/use-theme-color';
 export default function PerfilScreen() {
   const { logout } = useAuth();
 
-  const textColor = useThemeColor({}, 'text');
   const buttonPrimaryColor = useThemeColor({}, 'primary');
+  const buttonTextColor = useThemeColor({}, 'onPrimary');
 
   const handleLogout = () => {
     logout();
@@ -32,7 +32,7 @@ export default function PerfilScreen() {
           <Pressable
             onPress={handleLogout}
             style={({ pressed }) => [{ ...styles.button, backgroundColor: buttonPrimaryColor }, pressed && styles.buttonPressed]}>
-            <ThemedText type="defaultSemiBold" style={{ color: textColor }}>
+            <ThemedText type="defaultSemiBold" style={{ color: buttonTextColor }}>
               Sair
             </ThemedText>
           </Pressable>

@@ -38,6 +38,7 @@ export default function BookDetailScreen() {
   const ratingColor = useThemeColor({}, 'rating');
   const borderColor = useThemeColor({}, 'border');
   const buttonPrimaryColor = useThemeColor({}, 'primary');
+  const buttonTextColor = useThemeColor({}, 'onPrimary');
 
   useEffect(() => {
     if (!id) {
@@ -141,7 +142,7 @@ export default function BookDetailScreen() {
       opacity: 0.8,
     },
     saveButtonText: {
-      color: textColor,
+      color: buttonTextColor,
     },
   });
 
