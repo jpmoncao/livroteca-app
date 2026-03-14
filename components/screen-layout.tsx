@@ -8,32 +8,37 @@ import { ThemedText } from './themed-text';
 
 interface ScreenLayoutProps {
   children: React.ReactNode;
+  /** Exibe o header com botão Voltar. Padrão: true */
+  showHeader?: boolean;
 }
 
-export function ScreenLayout({ children }: ScreenLayoutProps) {
+export function ScreenLayout({ children, showHeader = true }: ScreenLayoutProps) {
   const textColor = useThemeColor({}, 'text');
+  const backgroundColor = useThemeColor({}, 'background');
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <View style={styles.header}>
-        <Pressable
-          onPress={() => {
-            if (router.canGoBack()) {
-              router.back();
-            } else {
-              router.push(`/(tabs)/home`);
-            }
-          }}
-          style={({ pressed, hovered }) => [
-            styles.backButton,
-            (pressed || hovered) && styles.backButtonHover,
-          ]}
-          hitSlop={12}>
-          <MaterialIcons name="arrow-back" size={24} color={textColor} />
-          <ThemedText type="default">Voltar</ThemedText>
-        </Pressable>
-      </View>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor }]}>
+      {showHeader && (
+        <View style={styles.header}>
+          <Pressable
+            onPress={() => {
+              if (router.canGoBack()) {
+                router.back();
+              } else {
+                router.push(`/(tabs)/home`);
+              }
+            }}
+            style={({ pressed, hovered }) => [
+              styles.backButton,
+              (pressed || hovered) && styles.backButtonHover,
+            ]}
+            hitSlop={12}>
+            <MaterialIcons name="arrow-back" size={24} color={textColor} />
+            <ThemedText type="default">Voltar</ThemedText>
+          </Pressable>
+        </View>
+      )}
       {children}
     </View>
   );
@@ -42,6 +47,8 @@ export function ScreenLayout({ children }: ScreenLayoutProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    minWidth: '100%',
+    minHeight: '100%',
   },
   header: {
     flexDirection: 'row',
