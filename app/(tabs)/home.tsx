@@ -1,5 +1,5 @@
-import { FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useEffect, useState } from 'react';
+import { FlatList, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -41,65 +41,70 @@ export default function HomeScreen() {
   if (loading) {
     return (
       <ThemedView style={styles.container}>
-        <ThemedText type="default">Carregando livros...</ThemedText>
+        <ThemedText type="default" style={{ marginTop: 48 }}>Carregando livros...</ThemedText>
       </ThemedView>
     );
   }
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedView style={styles.booksContainer}>
-        <ThemedText type="subtitle">Escolha um livro para começar</ThemedText>
-        <FlatList
-          data={books}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.bookListContent}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          renderItem={({ item, index }: { item: Book; index: number }) => (
-            <TouchableOpacity style={styles.bookCover} onPress={() => handleBookPress(item)}>
-              <Image
-                source={{ uri: item.coverUrl ?? 'https://via.placeholder.com/150' }}
-                style={[
-                  styles.bookCoverPlaceholder,
-                  { backgroundColor: BOOK_COVER_COLORS[index % BOOK_COVER_COLORS.length] },
-                ]}
-                resizeMode="cover"
-              />
-              <ThemedText style={styles.bookTitle} type="default" numberOfLines={3}>
-                {item.title}
-              </ThemedText>
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item: Book) => item.id.toString()}
-        />
-      </ThemedView>
-      <ThemedView style={styles.booksContainer}>
-        <ThemedText type="subtitle">Os mais lidos da semana</ThemedText>
-        <FlatList
-          data={hotBooks}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.bookListContent}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          renderItem={({ item, index }: { item: Book; index: number }) => (
-            <TouchableOpacity onPress={() => handleBookPress(item)} style={styles.bookCover}>
-              <Image
-                source={{ uri: item.coverUrl ?? 'https://via.placeholder.com/150' }}
-                style={[
-                  styles.bookCoverPlaceholder,
-                  { backgroundColor: BOOK_COVER_COLORS[(books.length + index) % BOOK_COVER_COLORS.length] },
-                ]}
-                resizeMode="cover"
-              />
-              <ThemedText style={styles.bookTitle} type="default" numberOfLines={3}>
-                {item.title}
-              </ThemedText>
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item: Book) => item.id.toString()}
-        />
-      </ThemedView>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}>
+        <ThemedView style={styles.booksContainer}>
+          <ThemedText type="subtitle">Escolha um livro para começar</ThemedText>
+          <FlatList
+            data={books}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.bookListContent}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            renderItem={({ item, index }: { item: Book; index: number }) => (
+              <TouchableOpacity style={styles.bookCover} onPress={() => handleBookPress(item)}>
+                <Image
+                  source={{ uri: item.coverUrl ?? 'https://via.placeholder.com/150' }}
+                  style={[
+                    styles.bookCoverPlaceholder,
+                    { backgroundColor: BOOK_COVER_COLORS[index % BOOK_COVER_COLORS.length] },
+                  ]}
+                  resizeMode="cover"
+                />
+                <ThemedText style={styles.bookTitle} type="default" numberOfLines={3}>
+                  {item.title}
+                </ThemedText>
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item: Book) => item.id.toString()}
+          />
+        </ThemedView>
+        <ThemedView style={styles.booksContainer}>
+          <ThemedText type="subtitle">Os mais lidos da semana</ThemedText>
+          <FlatList
+            data={hotBooks}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.bookListContent}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            renderItem={({ item, index }: { item: Book; index: number }) => (
+              <TouchableOpacity onPress={() => handleBookPress(item)} style={styles.bookCover}>
+                <Image
+                  source={{ uri: item.coverUrl ?? 'https://via.placeholder.com/150' }}
+                  style={[
+                    styles.bookCoverPlaceholder,
+                    { backgroundColor: BOOK_COVER_COLORS[(books.length + index) % BOOK_COVER_COLORS.length] },
+                  ]}
+                  resizeMode="cover"
+                />
+                <ThemedText style={styles.bookTitle} type="default" numberOfLines={3}>
+                  {item.title}
+                </ThemedText>
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item: Book) => item.id.toString()}
+          />
+        </ThemedView>
+      </ScrollView>
     </ThemedView>
   );
 }
@@ -107,14 +112,19 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
     alignItems: 'center',
-    gap: 32,
+    width: '100%',
+    minHeight: '100%',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
     padding: 16,
     paddingTop: 32,
-    width: '100%',
-    height: '100%',
-    overflowY: 'auto',
+    paddingBottom: 48,
+    gap: 32,
+    alignItems: 'center',
   },
   titleContainer: {
     alignItems: 'flex-start',
