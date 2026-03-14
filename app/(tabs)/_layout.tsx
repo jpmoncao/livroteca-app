@@ -4,22 +4,24 @@ import { View } from 'react-native';
 
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import MenuMobile from '../../components/ui/menu-mobile';
+import { useThemeColor } from '../../hooks/use-theme-color';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const backgroundColor = useThemeColor({}, 'background');
+  const menuBackgroundColor = useThemeColor({}, 'menuBackground');
+  const iconColor = useThemeColor({}, 'icon');
+  const tintColor = useThemeColor({}, 'tint');
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor }}>
       <MenuMobile />
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+          tabBarActiveTintColor: tintColor,
           headerShown: false,
           tabBarButton: HapticTab,
-          animation: 'shift',
+          animation: 'fade',
         }}
       >
         <Tabs.Screen
@@ -43,9 +45,9 @@ export default function TabLayout() {
             title: 'Pesquisar',
             tabBarIcon: ({ color }) => <IconSymbol size={28} name="search.fill" color={color} />,
             tabBarStyle: {
-              backgroundColor: Colors[colorScheme ?? 'light'].menuBackground,
+              backgroundColor: menuBackgroundColor,
               borderTopWidth: 1,
-              borderTopColor: Colors[colorScheme ?? 'light'].icon,
+              borderTopColor: iconColor,
             },
           }}
         />
