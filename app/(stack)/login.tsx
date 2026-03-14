@@ -9,8 +9,11 @@ import { useThemeColor } from '@/hooks/use-theme-color';
 
 export default function LoginScreen() {
   const { login } = useAuth();
+
   const textColor = useThemeColor({}, 'text');
   const iconColor = useThemeColor({}, 'icon');
+  const borderColor = useThemeColor({}, 'border');
+  const buttonPrimaryColor = useThemeColor({}, 'primary');
 
   const handleLogin = () => {
     login();
@@ -30,14 +33,14 @@ export default function LoginScreen() {
 
           <View style={styles.form}>
             <TextInput
-              style={[styles.input, { color: textColor }]}
+              style={[{ ...styles.input, borderColor }, { color: textColor }]}
               placeholder="E-mail"
               placeholderTextColor={iconColor}
               keyboardType="email-address"
               autoCapitalize="none"
             />
             <TextInput
-              style={[styles.input, { color: textColor }]}
+              style={[{ ...styles.input, borderColor }, { color: textColor }]}
               placeholder="Senha"
               placeholderTextColor={iconColor}
               secureTextEntry
@@ -46,8 +49,8 @@ export default function LoginScreen() {
 
           <Pressable
             onPress={handleLogin}
-            style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}>
-            <ThemedText type="defaultSemiBold" style={styles.buttonText}>
+            style={({ pressed }) => [{ ...styles.button, backgroundColor: buttonPrimaryColor }, pressed && styles.buttonPressed]}>
+            <ThemedText type="defaultSemiBold" style={{ color: textColor }}>
               Entrar
             </ThemedText>
           </Pressable>
@@ -84,22 +87,17 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#6B5344',
     borderRadius: 8,
     padding: 16,
     fontSize: 16,
   },
   button: {
-    backgroundColor: '#6B5344',
     paddingVertical: 16,
     borderRadius: 8,
     alignItems: 'center',
   },
   buttonPressed: {
     opacity: 0.8,
-  },
-  buttonText: {
-    color: '#fff',
   },
   registerLink: {
     marginTop: 24,

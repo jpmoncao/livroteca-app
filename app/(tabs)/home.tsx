@@ -6,6 +6,7 @@ import { ThemedView } from '@/components/themed-view';
 import { BOOK_COVER_COLORS } from '@/constants/theme';
 import { searchBooks, type Book } from '@/lib/openLibrary';
 import { router } from 'expo-router';
+import { useThemeColor } from '../../hooks/use-theme-color';
 
 const BOOK_COVER_WIDTH = 120;
 const BOOK_COVER_HEIGHT = 180;
@@ -14,6 +15,8 @@ export default function HomeScreen() {
   const [books, setBooks] = useState<Book[]>([]);
   const [hotBooks, setHotBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const borderColor = useThemeColor({}, 'border');
 
   useEffect(() => {
     async function fetchBooks() {
@@ -66,6 +69,7 @@ export default function HomeScreen() {
                   source={{ uri: item.coverUrl ?? 'https://via.placeholder.com/150' }}
                   style={[
                     styles.bookCoverPlaceholder,
+                    { borderColor },
                     { backgroundColor: BOOK_COVER_COLORS[index % BOOK_COVER_COLORS.length] },
                   ]}
                   resizeMode="cover"
@@ -92,6 +96,7 @@ export default function HomeScreen() {
                   source={{ uri: item.coverUrl ?? 'https://via.placeholder.com/150' }}
                   style={[
                     styles.bookCoverPlaceholder,
+                    { borderColor },
                     { backgroundColor: BOOK_COVER_COLORS[(books.length + index) % BOOK_COVER_COLORS.length] },
                   ]}
                   resizeMode="cover"
@@ -156,7 +161,6 @@ const styles = StyleSheet.create({
     height: BOOK_COVER_HEIGHT,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: '#6B5344',
   },
   bookTitle: {
     marginTop: 8,

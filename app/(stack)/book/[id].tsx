@@ -35,6 +35,9 @@ export default function BookDetailScreen() {
 
   const textColor = useThemeColor({}, 'text');
   const iconColor = useThemeColor({}, 'icon');
+  const ratingColor = useThemeColor({}, 'rating');
+  const borderColor = useThemeColor({}, 'border');
+  const buttonPrimaryColor = useThemeColor({}, 'primary');
 
   useEffect(() => {
     if (!id) {
@@ -48,6 +51,99 @@ export default function BookDetailScreen() {
   }, [id]);
 
   const bookIndex = id ? (id.length % BOOK_COVER_COLORS.length) : 0;
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    centered: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 16,
+    },
+    loadingText: {
+      opacity: 0.8,
+    },
+    keyboardView: {
+      flex: 1,
+    },
+    scrollContent: {
+      paddingHorizontal: 20,
+      paddingTop: 8,
+      paddingBottom: 40,
+    },
+    content: {
+      paddingHorizontal: 20,
+      paddingTop: 8,
+    },
+    bookInfo: {
+      flexDirection: 'row',
+      marginBottom: 32,
+      gap: 20,
+    },
+    cover: {
+      width: BOOK_COVER_WIDTH,
+      height: BOOK_COVER_HEIGHT,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: borderColor,
+    },
+    bookDetails: {
+      flex: 1,
+      justifyContent: 'center',
+      gap: 8,
+    },
+    title: {
+      fontSize: 24,
+    },
+    author: {
+      opacity: 0.8,
+    },
+    isbn: {
+      opacity: 0.7,
+      fontSize: 14,
+      fontFamily: 'monospace',
+    },
+    section: {
+      marginBottom: 28,
+    },
+    sectionTitle: {
+      marginBottom: 12,
+    },
+    starsRow: {
+      flexDirection: 'row',
+      gap: 8,
+      marginBottom: 8,
+    },
+    starButton: {
+      padding: 4,
+    },
+    ratingHint: {
+      opacity: 0.7,
+      fontSize: 14,
+    },
+    reviewInput: {
+      borderWidth: 1,
+      borderColor: borderColor,
+      borderRadius: 8,
+      padding: 16,
+      minHeight: 140,
+      fontSize: 16,
+    },
+    saveButton: {
+      backgroundColor: buttonPrimaryColor,
+      paddingVertical: 16,
+      borderRadius: 8,
+      alignItems: 'center',
+      marginTop: 8,
+    },
+    saveButtonPressed: {
+      opacity: 0.8,
+    },
+    saveButtonText: {
+      color: textColor,
+    },
+  });
 
   if (loading) {
     return (
@@ -97,178 +193,85 @@ export default function BookDetailScreen() {
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}>
             {/* Informações do livro */}
-          <View style={styles.bookInfo}>
-            <Image
-              source={{ uri: book.coverUrl ?? 'https://via.placeholder.com/150' }}
-              style={[
-                styles.cover,
-                { backgroundColor: BOOK_COVER_COLORS[bookIndex % BOOK_COVER_COLORS.length] },
-              ]}
-              resizeMode="cover"
-            />
-            <View style={styles.bookDetails}>
-              <ThemedText type="title" style={styles.title}>
-                {book.title}
+            <View style={styles.bookInfo}>
+              <Image
+                source={{ uri: book.coverUrl ?? 'https://via.placeholder.com/150' }}
+                style={[
+                  styles.cover,
+                  { backgroundColor: BOOK_COVER_COLORS[bookIndex % BOOK_COVER_COLORS.length] },
+                ]}
+                resizeMode="cover"
+              />
+              <View style={styles.bookDetails}>
+                <ThemedText type="title" style={styles.title}>
+                  {book.title}
+                </ThemedText>
+                {book.author && (
+                  <ThemedText type="default" style={styles.author}>
+                    {book.author}
+                  </ThemedText>
+                )}
+                {book.isbn && (
+                  <ThemedText type="default" style={styles.isbn}>
+                    ISBN: {book.isbn}
+                  </ThemedText>
+                )}
+              </View>
+            </View>
+
+            {/* Avaliação com estrelas */}
+            <View style={styles.section}>
+              <ThemedText type="subtitle" style={styles.sectionTitle}>
+                Sua avaliação
               </ThemedText>
-              {book.author && (
-                <ThemedText type="default" style={styles.author}>
-                  {book.author}
-                </ThemedText>
-              )}
-              {book.isbn && (
-                <ThemedText type="default" style={styles.isbn}>
-                  ISBN: {book.isbn}
-                </ThemedText>
-              )}
+              <View style={styles.starsRow}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Pressable
+                    key={star}
+                    onPress={() => setRating(star)}
+                    style={styles.starButton}
+                    hitSlop={8}>
+                    <MaterialIcons
+                      name={star <= rating ? 'star' : 'star-border'}
+                      size={40}
+                      color={star <= rating ? ratingColor : iconColor}
+                    />
+                  </Pressable>
+                ))}
+              </View>
+              <ThemedText type="default" style={styles.ratingHint}>
+                {rating === 0 ? 'Toque para avaliar' : `${rating} de 5 estrelas`}
+              </ThemedText>
             </View>
-          </View>
 
-          {/* Avaliação com estrelas */}
-          <View style={styles.section}>
-            <ThemedText type="subtitle" style={styles.sectionTitle}>
-              Sua avaliação
-            </ThemedText>
-            <View style={styles.starsRow}>
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Pressable
-                  key={star}
-                  onPress={() => setRating(star)}
-                  style={styles.starButton}
-                  hitSlop={8}>
-                  <MaterialIcons
-                    name={star <= rating ? 'star' : 'star-border'}
-                    size={40}
-                    color={star <= rating ? '#F5A623' : iconColor}
-                  />
-                </Pressable>
-              ))}
+            {/* Campo de resenha */}
+            <View style={styles.section}>
+              <ThemedText type="subtitle" style={styles.sectionTitle}>
+                Resenha
+              </ThemedText>
+              <TextInput
+                style={[styles.reviewInput, { color: textColor }]}
+                placeholder="Escreva sua resenha sobre o livro..."
+                placeholderTextColor={iconColor}
+                multiline
+                numberOfLines={6}
+                value={review}
+                onChangeText={setReview}
+                textAlignVertical="top"
+              />
             </View>
-            <ThemedText type="default" style={styles.ratingHint}>
-              {rating === 0 ? 'Toque para avaliar' : `${rating} de 5 estrelas`}
-            </ThemedText>
-          </View>
 
-          {/* Campo de resenha */}
-          <View style={styles.section}>
-            <ThemedText type="subtitle" style={styles.sectionTitle}>
-              Resenha
-            </ThemedText>
-            <TextInput
-              style={[styles.reviewInput, { color: textColor }]}
-              placeholder="Escreva sua resenha sobre o livro..."
-              placeholderTextColor={iconColor}
-              multiline
-              numberOfLines={6}
-              value={review}
-              onChangeText={setReview}
-              textAlignVertical="top"
-            />
-          </View>
-
-          {/* Botão salvar */}
-          <Pressable
-            onPress={handleSaveReview}
-            style={({ pressed }) => [styles.saveButton, pressed && styles.saveButtonPressed]}>
-            <ThemedText type="defaultSemiBold" style={styles.saveButtonText}>
-              Salvar avaliação
-            </ThemedText>
-          </Pressable>
+            {/* Botão salvar */}
+            <Pressable
+              onPress={handleSaveReview}
+              style={({ pressed }) => [styles.saveButton, pressed && styles.saveButtonPressed]}>
+              <ThemedText type="defaultSemiBold" style={styles.saveButtonText}>
+                Salvar avaliação
+              </ThemedText>
+            </Pressable>
           </ScrollView>
         </KeyboardAvoidingView>
       </ScreenLayout>
     </ThemedView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  centered: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 16,
-  },
-  loadingText: {
-    opacity: 0.8,
-  },
-  keyboardView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 40,
-  },
-  content: {
-    paddingHorizontal: 20,
-    paddingTop: 8,
-  },
-  bookInfo: {
-    flexDirection: 'row',
-    marginBottom: 32,
-    gap: 20,
-  },
-  cover: {
-    width: BOOK_COVER_WIDTH,
-    height: BOOK_COVER_HEIGHT,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#6B5344',
-  },
-  bookDetails: {
-    flex: 1,
-    justifyContent: 'center',
-    gap: 8,
-  },
-  title: {
-    fontSize: 24,
-  },
-  author: {
-    opacity: 0.8,
-  },
-  isbn: {
-    opacity: 0.7,
-    fontSize: 14,
-    fontFamily: 'monospace',
-  },
-  section: {
-    marginBottom: 28,
-  },
-  sectionTitle: {
-    marginBottom: 12,
-  },
-  starsRow: {
-    flexDirection: 'row',
-    gap: 8,
-    marginBottom: 8,
-  },
-  starButton: {
-    padding: 4,
-  },
-  ratingHint: {
-    opacity: 0.7,
-    fontSize: 14,
-  },
-  reviewInput: {
-    borderWidth: 1,
-    borderColor: '#6B5344',
-    borderRadius: 8,
-    padding: 16,
-    minHeight: 140,
-    fontSize: 16,
-  },
-  saveButton: {
-    backgroundColor: '#6B5344',
-    paddingVertical: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  saveButtonPressed: {
-    opacity: 0.8,
-  },
-  saveButtonText: {
-    color: '#fff',
-  },
-});

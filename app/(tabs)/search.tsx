@@ -38,6 +38,7 @@ export default function SearchScreen() {
     const textColor = useThemeColor({}, 'text');
     const iconColor = useThemeColor({}, 'icon');
     const borderColor = useThemeColor({}, 'icon');
+    const buttonPrimaryColor = useThemeColor({}, 'primary');
 
     const searchByName = useCallback(async (q: string) => {
         const trimmed = q.trim();
@@ -87,7 +88,7 @@ export default function SearchScreen() {
         if (scannedRef.current) return;
         const isbn = data.replace(/\D/g, '');
         if (isbn.length < 10) return;
-        
+
         scannedRef.current = true;
         setScannerLoading(true);
         try {
@@ -111,6 +112,165 @@ export default function SearchScreen() {
     const getPlaceholderColor = (index: number) =>
         BOOK_COVER_COLORS[index % BOOK_COVER_COLORS.length];
 
+
+
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            paddingTop: 64,
+        },
+        header: {
+            paddingHorizontal: 20,
+            paddingBottom: 20,
+            gap: 12,
+        },
+        searchRow: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 12,
+            paddingHorizontal: 14,
+            paddingVertical: 12,
+            borderRadius: 12,
+            borderWidth: 1,
+        },
+        searchInput: {
+            flex: 1,
+            fontSize: 16,
+            paddingVertical: 0,
+        },
+        scanButton: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            backgroundColor: buttonPrimaryColor,
+            paddingVertical: 14,
+            borderRadius: 12,
+        },
+        scanButtonText: {
+            color: textColor,
+            fontWeight: '600',
+        },
+        centered: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 16,
+            paddingHorizontal: 32,
+        },
+        hint: {
+            textAlign: 'center',
+            opacity: 0.8,
+        },
+        listContent: {
+            paddingHorizontal: 16,
+            paddingBottom: 24,
+        },
+        row: {
+            justifyContent: 'space-between',
+            marginBottom: 24,
+            gap: 16,
+        },
+        bookCard: {
+            flex: 1,
+            maxWidth: '48%',
+            alignItems: 'center',
+        },
+        bookCover: {
+            width: BOOK_COVER_WIDTH,
+            height: BOOK_COVER_HEIGHT,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: 'rgba(0,0,0,0.1)',
+        },
+        bookCoverPlaceholder: {
+            width: BOOK_COVER_WIDTH,
+            height: BOOK_COVER_HEIGHT,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: 'rgba(0,0,0,0.1)',
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        bookTitle: {
+            marginTop: 8,
+            textAlign: 'center',
+            fontSize: 13,
+            fontWeight: '600',
+        },
+        bookAuthor: {
+            marginTop: 2,
+            textAlign: 'center',
+            fontSize: 11,
+            opacity: 0.7,
+        },
+        modalContainer: {
+            flex: 1,
+            backgroundColor: '#000',
+        },
+        modalHeader: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingHorizontal: 20,
+            paddingTop: 60,
+            paddingBottom: 16,
+        },
+        modalTitle: {
+            color: '#fff',
+        },
+        closeButton: {
+            padding: 4,
+        },
+        permissionBox: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingHorizontal: 32,
+            gap: 24,
+        },
+        permissionText: {
+            color: '#fff',
+            textAlign: 'center',
+        },
+        cameraWrapper: {
+            flex: 1,
+            position: 'relative',
+        },
+        camera: {
+            flex: 1,
+        },
+        scannerOverlay: {
+            ...StyleSheet.absoluteFillObject,
+            backgroundColor: 'rgba(0,0,0,0.6)',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 12,
+        },
+        scannerOverlayText: {
+            color: '#fff',
+        },
+        scanFrame: {
+            position: 'absolute',
+            top: '35%',
+            left: '15%',
+            right: '15%',
+            height: 120,
+            borderWidth: 2,
+            borderColor: 'rgba(255,255,255,0.6)',
+            borderRadius: 12,
+        },
+        scanHint: {
+            position: 'absolute',
+            bottom: 48,
+            left: 20,
+            right: 20,
+            color: '#fff',
+            textAlign: 'center',
+            opacity: 0.9,
+        },
+    });
+
     return (
         <ThemedView style={styles.container}>
             <View style={styles.header}>
@@ -130,7 +290,7 @@ export default function SearchScreen() {
                     style={styles.scanButton}
                     onPress={handleOpenScanner}
                     activeOpacity={0.8}>
-                    <MaterialIcons name="qr-code-scanner" size={24} color="#fff" />
+                    <MaterialIcons name="qr-code-scanner" size={24} color={textColor} />
                     <ThemedText style={styles.scanButtonText}>Escanear ISBN</ThemedText>
                 </TouchableOpacity>
             </View>
@@ -184,7 +344,7 @@ export default function SearchScreen() {
                                     <IconSymbol
                                         name="book.closed.fill"
                                         size={40}
-                                        color="rgba(255,255,255,0.5)"
+                                        color={iconColor}
                                     />
                                 </View>
                             )}
@@ -217,7 +377,7 @@ export default function SearchScreen() {
                             }}
                             style={styles.closeButton}
                             hitSlop={12}>
-                            <MaterialIcons name="close" size={28} color="#fff" />
+                            <MaterialIcons name="close" size={28} color={textColor} />
                         </Pressable>
                     </View>
                     {!permission?.granted ? (
@@ -245,7 +405,7 @@ export default function SearchScreen() {
                             />
                             {scannerLoading && (
                                 <View style={styles.scannerOverlay}>
-                                    <ActivityIndicator size="large" color="#fff" />
+                                    <ActivityIndicator size="large" color={textColor} />
                                     <ThemedText style={styles.scannerOverlayText}>
                                         Buscando livro...
                                     </ThemedText>
@@ -262,160 +422,3 @@ export default function SearchScreen() {
         </ThemedView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 64,
-    },
-    header: {
-        paddingHorizontal: 20,
-        paddingBottom: 20,
-        gap: 12,
-    },
-    searchRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 12,
-        paddingHorizontal: 14,
-        paddingVertical: 12,
-        borderRadius: 12,
-        borderWidth: 1,
-    },
-    searchInput: {
-        flex: 1,
-        fontSize: 16,
-        paddingVertical: 0,
-    },
-    scanButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 8,
-        backgroundColor: '#6B5344',
-        paddingVertical: 14,
-        borderRadius: 12,
-    },
-    scanButtonText: {
-        color: '#fff',
-        fontWeight: '600',
-    },
-    centered: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 16,
-        paddingHorizontal: 32,
-    },
-    hint: {
-        textAlign: 'center',
-        opacity: 0.8,
-    },
-    listContent: {
-        paddingHorizontal: 16,
-        paddingBottom: 24,
-    },
-    row: {
-        justifyContent: 'space-between',
-        marginBottom: 24,
-        gap: 16,
-    },
-    bookCard: {
-        flex: 1,
-        maxWidth: '48%',
-        alignItems: 'center',
-    },
-    bookCover: {
-        width: BOOK_COVER_WIDTH,
-        height: BOOK_COVER_HEIGHT,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: 'rgba(0,0,0,0.1)',
-    },
-    bookCoverPlaceholder: {
-        width: BOOK_COVER_WIDTH,
-        height: BOOK_COVER_HEIGHT,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: 'rgba(0,0,0,0.1)',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    bookTitle: {
-        marginTop: 8,
-        textAlign: 'center',
-        fontSize: 13,
-        fontWeight: '600',
-    },
-    bookAuthor: {
-        marginTop: 2,
-        textAlign: 'center',
-        fontSize: 11,
-        opacity: 0.7,
-    },
-    modalContainer: {
-        flex: 1,
-        backgroundColor: '#000',
-    },
-    modalHeader: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        paddingTop: 60,
-        paddingBottom: 16,
-    },
-    modalTitle: {
-        color: '#fff',
-    },
-    closeButton: {
-        padding: 4,
-    },
-    permissionBox: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 32,
-        gap: 24,
-    },
-    permissionText: {
-        color: '#fff',
-        textAlign: 'center',
-    },
-    cameraWrapper: {
-        flex: 1,
-        position: 'relative',
-    },
-    camera: {
-        flex: 1,
-    },
-    scannerOverlay: {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0,0,0,0.6)',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 12,
-    },
-    scannerOverlayText: {
-        color: '#fff',
-    },
-    scanFrame: {
-        position: 'absolute',
-        top: '35%',
-        left: '15%',
-        right: '15%',
-        height: 120,
-        borderWidth: 2,
-        borderColor: 'rgba(255,255,255,0.6)',
-        borderRadius: 12,
-    },
-    scanHint: {
-        position: 'absolute',
-        bottom: 48,
-        left: 20,
-        right: 20,
-        color: '#fff',
-        textAlign: 'center',
-        opacity: 0.9,
-    },
-});

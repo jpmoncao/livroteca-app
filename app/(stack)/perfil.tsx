@@ -5,9 +5,13 @@ import { ScreenLayout } from '@/components/screen-layout';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { useAuth } from '@/contexts/auth-context';
+import { useThemeColor } from '../../hooks/use-theme-color';
 
 export default function PerfilScreen() {
   const { logout } = useAuth();
+
+  const textColor = useThemeColor({}, 'text');
+  const buttonPrimaryColor = useThemeColor({}, 'primary');
 
   const handleLogout = () => {
     logout();
@@ -27,8 +31,8 @@ export default function PerfilScreen() {
 
           <Pressable
             onPress={handleLogout}
-            style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}>
-            <ThemedText type="defaultSemiBold" style={styles.buttonText}>
+            style={({ pressed }) => [{ ...styles.button, backgroundColor: buttonPrimaryColor }, pressed && styles.buttonPressed]}>
+            <ThemedText type="defaultSemiBold" style={{ color: textColor }}>
               Sair
             </ThemedText>
           </Pressable>
@@ -55,15 +59,11 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   button: {
-    backgroundColor: '#6B5344',
     paddingVertical: 16,
     borderRadius: 8,
     alignItems: 'center',
   },
   buttonPressed: {
     opacity: 0.8,
-  },
-  buttonText: {
-    color: '#fff',
   },
 });

@@ -22,6 +22,11 @@ export default function TabLayout() {
           headerShown: false,
           tabBarButton: HapticTab,
           animation: 'fade',
+          tabBarStyle: {
+            backgroundColor: menuBackgroundColor,
+            borderTopWidth: 1,
+            borderTopColor: iconColor,
+          },
         }}
       >
         <Tabs.Screen
@@ -44,11 +49,6 @@ export default function TabLayout() {
           options={{
             title: 'Pesquisar',
             tabBarIcon: ({ color }) => <IconSymbol size={28} name="search.fill" color={color} />,
-            tabBarStyle: {
-              backgroundColor: menuBackgroundColor,
-              borderTopWidth: 1,
-              borderTopColor: iconColor,
-            },
           }}
         />
         <Tabs.Screen

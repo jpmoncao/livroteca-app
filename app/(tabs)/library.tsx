@@ -2,11 +2,12 @@ import { router } from 'expo-router';
 import { useEffect } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { BOOK_COVER_COLORS } from '@/constants/theme';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { IconSymbol } from '@/components/ui/icon-symbol';
+import { BOOK_COVER_COLORS } from '@/constants/theme';
 import { useAuth } from '@/contexts/auth-context';
+import { useThemeColor } from '../../hooks/use-theme-color';
 
 interface Book {
   id: number;
@@ -48,10 +49,13 @@ export default function LibraryScreen() {
   const getPlaceholderColor = (index: number) =>
     BOOK_COVER_COLORS[index % BOOK_COVER_COLORS.length];
 
+  const iconColor = useThemeColor({}, 'icon');
+
+
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.header}>
-        <IconSymbol name="book.fill" size={32} color="#808080" />
+        <IconSymbol name="book.fill" size={32} color={iconColor} />
         <ThemedText type="title" style={styles.title}>
           Biblioteca
         </ThemedText>
@@ -76,7 +80,7 @@ export default function LibraryScreen() {
                 styles.bookCoverPlaceholder,
                 { backgroundColor: getPlaceholderColor(index) },
               ]}>
-              <IconSymbol name="book.closed.fill" size={40} color="rgba(255,255,255,0.5)" />
+              <IconSymbol name="book.closed.fill" size={40} color={iconColor} />
             </View>
             <ThemedText style={styles.bookTitle} type="default" numberOfLines={2}>
               {item.title}
