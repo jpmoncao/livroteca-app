@@ -1,24 +1,69 @@
-import { router } from 'expo-router';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
-
 import { ScreenLayout } from '@/components/screen-layout';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { useAuth } from '@/contexts/auth-context';
 import { useThemeColor } from '@/hooks/use-theme-color';
+import { auth, database } from "@/services/connectionFirebase";
+import { router } from 'expo-router';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { ref, set } from 'firebase/database';
+import { useState } from 'react';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+
+interface User {
+  name: string;
+  email: string;
+  cellphone: string;
+  password: string;
+}
 
 export default function RegistrarScreen() {
-  const { login } = useAuth();
+  const [user, setUser] = useState<User | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const textColor = useThemeColor({}, 'text');
   const iconColor = useThemeColor({}, 'icon');
   const borderColor = useThemeColor({}, 'border');
   const buttonPrimaryColor = useThemeColor({}, 'primary');
   const buttonTextColor = useThemeColor({}, 'onPrimary');
 
-  const handleRegistrar = () => {
-    // TODO: Implementar cadastro real
-    login();
-    router.replace('/(tabs)/home');
+  const handleRegistrar = async () => {
+    if (!user || !user.cellphone || !user.email || !user.name || !user.password) {
+      setErrorMessage('Preencha todos os campos');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setErrorMessage(null);
+
+      const userCredential = await createUserWithEmailAndPassword(auth, user.email, user.password);
+
+      const userRef = ref(database, `users/${userCredential.user.uid}`);
+      await set(userRef, {
+        name: user.name,
+        email: user.email,
+        cellphone: user.cellphone,
+      });
+
+      router.replace('/login');
+    } catch (error) {
+      console.error(error);
+
+      switch ((error as any).code) {
+        case 'auth/email-already-in-use':
+          setErrorMessage('E-mail já cadastrado');
+          break;
+        case 'auth/invalid-email':
+          setErrorMessage('E-mail inválido');
+          break;
+        default:
+          setErrorMessage('Erro ao cadastrar');
+          break;
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -38,6 +83,8 @@ export default function RegistrarScreen() {
               placeholder="Nome"
               placeholderTextColor={iconColor}
               autoCapitalize="words"
+              value={user?.name}
+              onChangeText={(text) => setUser({ ...user, name: text } as User)}
             />
             <TextInput
               style={[styles.input, { color: textColor, borderColor }]}
@@ -45,26 +92,33 @@ export default function RegistrarScreen() {
               placeholderTextColor={iconColor}
               keyboardType="email-address"
               autoCapitalize="none"
+              value={user?.email}
+              onChangeText={(text) => setUser({ ...user, email: text } as User)}
             />
             <TextInput
               style={[styles.input, { color: textColor, borderColor }]}
               placeholder="Telefone"
               placeholderTextColor={iconColor}
               keyboardType="phone-pad"
+              value={user?.cellphone}
+              onChangeText={(text) => setUser({ ...user, cellphone: text } as User)}
             />
             <TextInput
               style={[styles.input, { color: textColor, borderColor }]}
               placeholder="Senha"
               placeholderTextColor={iconColor}
               secureTextEntry
+              value={user?.password}
+              onChangeText={(text) => setUser({ ...user, password: text } as User)}
             />
+            {errorMessage && <ThemedText type="default" style={{ color: 'red', marginBottom: 8 }}>{errorMessage}</ThemedText>}
           </View>
 
           <Pressable
             onPress={handleRegistrar}
-            style={({ pressed }) => [{ ...styles.button, backgroundColor: buttonPrimaryColor }, pressed && styles.buttonPressed]}>
-            <ThemedText type="defaultSemiBold" style={{ color: buttonTextColor }}>
-              Cadastrar
+            style={({ pressed }) => [{ ...styles.button, backgroundColor: buttonPrimaryColor, opacity: isLoading ? 0.5 : 1 }, pressed && styles.buttonPressed, isLoading && { opacity: 0.5 }]}>
+            <ThemedText type="defaultSemiBold" style={[{ color: buttonTextColor }]}>
+              {isLoading ? 'Carregando...' : 'Cadastrar'}
             </ThemedText>
           </Pressable>
 
