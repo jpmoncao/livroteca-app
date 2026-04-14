@@ -5,6 +5,7 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BOOK_COVER_COLORS } from '@/constants/theme';
 import { searchBooks, type Book } from '@/lib/openLibrary';
+
 import { router } from 'expo-router';
 import { useThemeColor } from '../../hooks/use-theme-color';
 
@@ -23,7 +24,7 @@ export default function HomeScreen() {
       setLoading(true);
       try {
         const [featured, popular] = await Promise.all([
-          searchBooks('senhor dos anéis hobbit', 5, 'pt'),
+          searchBooks('hobbit', 5, 'pt'),
           searchBooks('harry potter', 5, 'pt'),
         ]);
         setBooks(featured);
@@ -38,7 +39,7 @@ export default function HomeScreen() {
   }, []);
 
   const handleBookPress = (book: Book) => {
-    router.push(`/book/${book.id}`);
+    router.push(`/book/${encodeURIComponent(book.id)}`);
   };
 
   if (loading) {

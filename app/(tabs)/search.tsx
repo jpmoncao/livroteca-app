@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
     ActivityIndicator,
+    Alert,
     FlatList,
     Image,
     Modal,
@@ -71,11 +72,12 @@ export default function SearchScreen() {
     }, [query, searchByName]);
 
     const handleBookPress = (book: Book) => {
-        const id = book.workKey ?? book.id;
-        router.push(`/book/${id}`);
+        router.push(`/book/${encodeURIComponent(book.id)}`);
     };
 
     const handleOpenScanner = async () => {
+        setScannerLoading(false);
+
         if (!permission?.granted) {
             const result = await requestPermission();
             if (!result.granted) return;
@@ -85,8 +87,8 @@ export default function SearchScreen() {
     };
 
     const handleBarcodeScanned = async ({ data }: { data: string }) => {
-
         if (scannedRef.current) return;
+
         const isbn = data.replace(/\D/g, '');
         if (isbn.length < 10) return;
 
@@ -94,13 +96,19 @@ export default function SearchScreen() {
         setScannerLoading(true);
         try {
             const book = await getBookByIsbn(isbn);
-            console.log({ book })
             setShowScanner(false);
             if (book) {
-                const id = book.isbn ?? book.id;
-                router.push(`/book/${id}`);
+                router.push(`/book/${encodeURIComponent(book.id)}`);
             } else {
                 scannedRef.current = false;
+                Alert.alert('Livro não encontrado', 'Pesquise pelo nome do livro ou tente novamente.', [
+                    { text: 'OK', style: 'cancel' },
+                    {
+                        text: 'Escanear novamente', style: 'default', onPress: () => {
+                            handleOpenScanner();
+                        }
+                    }
+                ]);
             }
         } catch (err) {
             console.error(err);
@@ -243,8 +251,9 @@ export default function SearchScreen() {
         },
         scannerOverlay: {
             ...StyleSheet.absoluteFillObject,
-            backgroundColor: 'rgba(0,0,0,0.6)',
-            justifyContent: 'center',
+            backgroundColor: 'rgba(0,0,0,0.9)',
+            paddingTop: 128,
+            justifyContent: 'flex-start',
             alignItems: 'center',
             gap: 12,
         },
