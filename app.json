@@ -32,6 +32,13 @@
           "cameraPermission": "O Livroteca precisa da câmera para escanear códigos ISBN dos livros."
         }
       ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "O Livroteca usa a câmera para registrar as suas fotos de leitura.",
+          "photosPermission": "O Livroteca pode acessar suas fotos para anexar ao seu registro de leitura."
+        }
+      ],
       "expo-router",
       [
         "expo-splash-screen",
@@ -44,7 +51,8 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": true,

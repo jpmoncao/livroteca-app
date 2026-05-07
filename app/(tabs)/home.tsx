@@ -4,7 +4,7 @@ import { FlatList, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BOOK_COVER_COLORS } from '@/constants/theme';
-import { searchBooks, type Book } from '@/lib/openLibrary';
+import { searchOpenLibrary, type Book } from '@/lib/openLibrary';
 
 import { router } from 'expo-router';
 import { useThemeColor } from '../../hooks/use-theme-color';
@@ -23,10 +23,8 @@ export default function HomeScreen() {
     async function fetchBooks() {
       setLoading(true);
       try {
-        const [featured, popular] = await Promise.all([
-          searchBooks('hobbit', 5, 'pt'),
-          searchBooks('harry potter', 5, 'pt'),
-        ]);
+        const featured = await searchOpenLibrary('hobbit', 5, 'pt');
+        const popular = await searchOpenLibrary('harry potter', 5, 'pt');
         setBooks(featured);
         setHotBooks(popular);
       } catch (error) {
